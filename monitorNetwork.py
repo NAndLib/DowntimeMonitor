@@ -63,6 +63,8 @@ def parseArgs():
                          help="Timeout in seconds for connection check. Default: 1")
     parser.add_argument( '--verbose', '-v', action='store_true',
                          help="Verbose output")
+    parser.add_argument( '--daemon', '-d', action='store_true',
+                         help="Tells the script to run in daemon mode")
 
     return parser.parse_args()
 
@@ -96,8 +98,12 @@ if __name__ == '__main__':
                 writeLog( outFile, host, 'NOT CONNECTED' )
 
             elapsed = datetime.datetime.now() - startTime
-            sys.stdout.write( f"Elapsed time: {elapsed} "
-                              f"[{'OK' if ok else 'NOT CONNECTED'}]{' ' * 20}\r" )
+            if args.stdout or args.daemon:
+                sys.stdout.write( f"Elapsed time: {elapsed} "
+                                  f"[{'OK' if ok else 'NOT CONNECTED'}]{' ' * 20}\n" )
+            else:
+                sys.stdout.write( f"Elapsed time: {elapsed} "
+                                  f"[{'OK' if ok else 'NOT CONNECTED'}]{' ' * 20}\r" )
             sys.stdout.flush()
 
             sleep( args.interval )

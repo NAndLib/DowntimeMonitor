@@ -1,0 +1,13 @@
+[Unit]
+Description=Network uptime monitoring service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/python3 /home/andrew_nt/code/DowntimeMonitor/monitorNetwork.py --daemon --logFile /home/andrew_nt/docs/logs/network-monitor/connection.log
+
+[Install]
+WantedBy=default.target
