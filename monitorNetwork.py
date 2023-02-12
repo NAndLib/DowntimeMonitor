@@ -59,9 +59,10 @@ def parseArgs():
     parser.add_argument( '--stdout', action='store_true',
                          help="Use stdout instead of output file" )
     parser.add_argument( '--interval', '-i', metavar='SECONDS', type=int, default=5,
-                         help="Check the host every {interval} seconds" )
+                         help="Time in seconds to wait before checking "
+                              "the host again. Default: 5." )
     parser.add_argument( '--timeout', '-t', metavar='SECONDS', type=int, default=1,
-                         help="Timeout for connection check")
+                         help="Timeout in seconds for connection check. Default: 1")
     parser.add_argument( '--verbose', '-v', action='store_true',
                          help="Verbose output")
 
