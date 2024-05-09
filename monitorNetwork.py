@@ -76,8 +76,11 @@ def writeLog( file, host, status ):
 
 if __name__ == '__main__':
     args = parseArgs()
-    logFile = args.logFile
+    if args.daemon:
+        sys.stderr.write( "Deamon mode currently unsupported" )
+        exit(1)
 
+    logFile = args.logFile
     outFile = None
     if args.stdout:
         outFile = sys.stdout
