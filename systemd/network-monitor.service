@@ -7,7 +7,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/usr/bin/python3 /home/andrew_nt/code/DowntimeMonitor/monitorNetwork.py --logFile /home/andrew_nt/docs/logs/network-monitor/connection.log
+ExecStart=/usr/bin/python3 /home/andrew_nt/code/DowntimeMonitor/monitorNetwork.py --logFile /home/andrew_nt/docs/logs/network-monitor/connection.log --interval 15
 
 [Install]
 WantedBy=default.target
