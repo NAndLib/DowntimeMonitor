@@ -48,7 +48,7 @@ def internet( host: str = DEFAULT_HOST, port: int = DEFAULT_PORT,
 
 def timestamp():
     """ Get Current timestamp string """
-    return datetime.datetime.now().strftime("%a %b %d %H:%M:%S")
+    return datetime.datetime.now().isoformat()
 
 def parseArgs():
     parser = argparse.ArgumentParser( description="Monitor network connection" )
@@ -76,10 +76,11 @@ def parseArgs():
 
     return parser.parse_args()
 
-def writeLog( file, host, status ):
-    file.write( logFmt.format( timestamp=timestamp(),
-                               host=host,
-                               status=status ) )
+def writeLog( file: TextIO, host: str, port: int, status: str ):
+    file.write( LOG_FMT.format( timestamp=timestamp(),
+                                host=host,
+                                port=port,
+                                status=status ) )
     file.flush()
 
 if __name__ == '__main__':
@@ -93,20 +94,21 @@ if __name__ == '__main__':
     if args.stdout:
         outFile = sys.stdout
     elif not os.path.isfile( logFile ) or args.overwrite:
-        outFile = open( logFile, 'w' )
+        outFile = open( logFile, 'w', encoding="UTF-8" )
     else:
-        outFile = open( logFile, 'a' )
+        outFile = open( logFile, 'a', encoding="UTF-8" )
 
     host = args.host
+    port = args.port
     print( f"Starting monitoring with {host} at {timestamp()}" )
     startTime = datetime.datetime.now()
     try:
         while True:
             ok = internet( host, port, timeout=args.timeout, verbose=args.verbose )
             if ok:
-                writeLog( outFile, host, 'OK' )
+                writeLog( outFile, host, port, 'OK' )
             else:
-                writeLog( outFile, host, 'NOT CONNECTED' )
+                writeLog( outFile, host, port, 'NOT CONNECTED' )
 
             elapsed = datetime.datetime.now() - startTime
             if args.stdout or args.daemon:
