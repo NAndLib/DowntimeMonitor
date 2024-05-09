@@ -6,12 +6,18 @@ import argparse
 from time import sleep
 from urllib.parse import urlparse
 
-defaultHost = "http://www.google.com"
-logFmt = "{timestamp}\t{host}\t{status}\n"
-args = None
+from typing import TextIO
 
-def internet( host=defaultHost, port=80, timeout=5, verbose=False ):
-    """ Generates a new request"""
+DEFAULT_HOST = "8.8.8.8"
+DEFAULT_PORT = 443
+DEFAULT_TIMEOUT = 5
+LOG_FMT = "{timestamp}\t{host}:{port}\t{status}\n"
+
+def internet( host: str = DEFAULT_HOST, port: int = DEFAULT_PORT,
+              timeout: int = DEFAULT_TIMEOUT, verbose: bool = False ) -> bool:
+    """
+    Generates a small HEAD request to verify connectivity
+    """
     if host.startswith( 'http' ):
         host = urlparse( host ).netloc
     try:
@@ -47,13 +53,14 @@ def parseArgs():
     parser = argparse.ArgumentParser( description="Monitor network connection" )
 
     parser.add_argument(
-        '--host', '-H', dest='host', default=defaultHost,
-        help=f"Monitor using the given host. Default: {defaultHost}" )
+        '--host', '-H', dest='host', default=DEFAULT_HOST,
+        help=f"Monitor using the given host. Default: {DEFAULT_HOST}" )
+    parser.add_argument( '--port', '-p', default=DEFAULT_PORT, help=f"Use the given port. Default: {DEFAULT_PORT}" )
     parser.add_argument(
         '--overwrite-log', '-O', dest='overwrite', action='store_true',
         help="Overwrite the log file if it exists instead of appending" )
     parser.add_argument( '--logFile', '-l', default="connection.log",
-                         help="Name of log file to use" )
+                         help="Name of log file to use. Default: connection log" )
     parser.add_argument( '--stdout', action='store_true',
                          help="Use stdout instead of output file" )
     parser.add_argument( '--interval', '-i', metavar='SECONDS', type=int, default=5,
