@@ -109,7 +109,7 @@ for uptimeRange in uptimeRanges:
     print(uptimeRange)
 print(f"The connection was up {len(uptimeRanges)} times during the period")
 print(f"The total up time was: {total}")
-print(f"Average up time was: {total / 10}")
+print(f"Average up time was: {total / len(uptimeRanges)}")
 print('-' * 80)
 
 total = datetime.timedelta()
@@ -119,4 +119,4 @@ for downtimeRange in downtimeRanges:
     print(downtimeRange)
 print(f"The connection was down {len(downtimeRanges)} times during the period")
 print(f"The total down time was: {total}")
-print(f"Average down time was: {total / 10}")
+print(f"Average down time was: {total / len(downtimeRanges)}")
