@@ -14,5 +14,6 @@ if ! [[ -d "$LOG_DIR" ]]; then
   echo "No directory $LOG_DIR found."
 fi
 
-DATE=$(date -I)
+DATE=$(date -Ins)
 find "$LOG_DIR" -type f -size +100M -exec lrzip -g -o "$LOG_DIR/$DATE.lrz" {} \;
+find "$LOG_DIR" -type f -size +100M -name "*.log" -exec rm -f {} \;
