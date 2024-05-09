@@ -46,11 +46,8 @@ for line in logFile.readlines():
     now = datetime.datetime.now()
     timestamp, host, status = line.rstrip().split('\t')
 
-    timeObj = datetime.datetime.strptime(timestamp, "%a %b %d %H:%M:%S")
-    timeObj = timeObj.replace(year=now.year)
-
+    timeObj = datetime.datetime.fromisoformat(timestamp)
     lineTuples.append(LineTuple(timeObj, host, status))
-
 
 def getTimeRanges(status):
     result = []
