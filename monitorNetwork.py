@@ -5,6 +5,7 @@ import datetime
 import argparse
 from time import sleep
 from urllib.parse import urlparse
+import http.client as httplib
 
 from typing import TextIO
 
@@ -20,13 +21,11 @@ def internet( host: str = DEFAULT_HOST, port: int = DEFAULT_PORT,
     """
     if host.startswith( 'http' ):
         host = urlparse( host ).netloc
+    conn = httplib.HTTPSConnection(host, port, timeout=timeout)
     try:
-        hostIp = socket.gethostbyname( host )
-        sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-        sock.settimeout( timeout )
         if verbose:
-            print(f"internet( host={hostIp}, port={port}, timeout={timeout} )")
-        sock.connect( ( hostIp, port ) )
+            print(f"internet( host={host}, port={port}, timeout={timeout} )")
+        conn.request("HEAD", "/")
         return True
     except socket.timeout:
         if verbose:
@@ -34,7 +33,7 @@ def internet( host: str = DEFAULT_HOST, port: int = DEFAULT_PORT,
         return False
     except socket.gaierror:
         if verbose:
-            print("Resolving error")
+            print("Resolution error")
         return False
     except KeyboardInterrupt:
         if verbose:
@@ -44,6 +43,8 @@ def internet( host: str = DEFAULT_HOST, port: int = DEFAULT_PORT,
         if verbose:
             print(f"Unknown Exception({e})")
         return False
+    finally:
+        conn.close()
 
 def timestamp():
     """ Get Current timestamp string """
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     startTime = datetime.datetime.now()
     try:
         while True:
-            ok = internet( host, timeout=args.timeout, verbose=args.verbose )
+            ok = internet( host, port, timeout=args.timeout, verbose=args.verbose )
             if ok:
                 writeLog( outFile, host, 'OK' )
             else:
